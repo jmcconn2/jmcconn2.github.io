@@ -1,0 +1,16 @@
+body {
+    background-color: powderblue;
+    font-family: verdana;
+}
+canvas{
+    border: 2px solid black;
+    background-color: grey;
+    
+}
+
+form{
+border: 1px solid black;
+width:200px;
+padding-left:10px;
+padding-bottom:10px;
+}
