@@ -11,13 +11,18 @@
 <body>
     <canvas id="myCanvas" width="1200" height="750" ></canvas>
     <br>
+    <p id="total"> Total Money : 1000</p>
     <button type = "button" onclick = "hit()">Hit</button>
     <button type = "button" onclick = "endGame()">Stay</button>
     <h1 id="GameOver" style="visibility:hidden;"></h1>
     <button type="button" id="Play again" onclick="startGame()">Reset</button>
+    Money: <input type="text" id="bet"></input><button type="button" onclick="placeBet()">Place Bet</button>
     <script>
     var cardimg = new Image();
     var money=1000;
+    var bet=0;
+    var ended = false;
+    var placed = false;
     cardimg.src="cards.png";
     var Suit =["Spades","Clubs","Diamonds","Hearts"];
     var Value =["Ace","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Jack","Queen","King"];
@@ -67,6 +72,16 @@
         startGame();
     }
     
+    function placeBet(){
+        int betAmount = document.getElementById("bet").val();
+        
+        if(betAmount <= money){
+           bet = betAmount;
+           placed=true;
+        }
+        
+    }
+    
     function startGame(){
         
             document.getElementById("GameOver").style.visibility="hidden";
@@ -92,15 +107,18 @@
             draw(pHand,true,false);
             draw(dHand,false,false);
             if(value(dHand)==21 ||value(pHand)==21){
+                
                 endGame();
             }
         
     }
     function hit(){
-        pHand.push(Deck.remove());
-        draw(pHand,true,false);
-        if(pHand.length==5 || value(pHand)>21){
-            endGame()
+        if(!ended && placed){
+            pHand.push(Deck.remove());
+            draw(pHand,true,false);
+            if(pHand.length==5 || value(pHand)>21){
+                endGame()
+            }
         }
     }
     function drawDealer(){
@@ -111,6 +129,7 @@
 
     }
     function endGame(){
+        ended=true;
         drawDealer();
         dealerval=value(dHand);
         playerval=value(pHand);
@@ -119,12 +138,17 @@
         if(playerval<=dealerval && dealerval<22 || playerval>21){
             document.getElementById("GameOver").innerHTML="You Lose!!!"
             document.getElementById("GameOver").style.visibility="visible";
+            money -=betAmount;
+            
         }
         else{
             document.getElementById("GameOver").innerHTML="You Win!!!"
             document.getElementById("GameOver").style.visibility="visible";
+            money+=betAmount;
             //add play again button
         }
+        
+        document.getElementById("total").innerHTML="Total Money : "+money;
     }
     function value(cards){
         var total=0,numaces=0;
